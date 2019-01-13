@@ -51,23 +51,30 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$axios.post("login",{
-            username:this.formLabelAlign.name,
-            password:this.formLabelAlign.password
-          })
-          .then(res=>{
-            console.log(res);
-            
-            //错误
-            if(res.data.meta.status===400){
-              this.$message.error(res.data.meta.msg);
-            }else if(res.data.meta.status==200){
-              //正确
-              this.$message.success(res.data.meta.msg);
-            }
-          });
+          this.$axios
+            .post("login", {
+              username: this.formLabelAlign.name,
+              password: this.formLabelAlign.password
+            })
+            .then(res => {
+              console.log(res);
+
+              //错误
+              if (res.data.meta.status === 400) {
+                this.$message.error(res.data.meta.msg);
+              } else if (res.data.meta.status == 200) {
+                //正确
+                this.$message.success(res.data.meta.msg);
+                //保存token sessionStorage
+                window.sessionStorage.setItem("token", res.data.data.token);
+                //成功跳转首页
+                setTimeout(()=> {
+                  this.$router.push("/");
+                }, 1200);
+              }
+            });
         } else {
-          this.$message.error("请输入用户名和密码!")
+          this.$message.error("请输入用户名和密码!");
           return false;
         }
       });
