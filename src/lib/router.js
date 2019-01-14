@@ -26,5 +26,21 @@ let router = new VueRouter({
     routes
 })
 
+//全局守卫 (就是回到函数)
+router.beforeEach((to, from, next) => {
+    
+
+    next();
+    if(to.path==="/login"){
+        next();
+    }else{
+        //没有token 没有登录
+        Vue.prototype.$message.console.error("请先登录");
+        //跳转到登录页
+        next('/login')
+        
+    }
+  })
+
 //暴露出去
 export default router;
