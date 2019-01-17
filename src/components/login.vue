@@ -61,10 +61,10 @@ export default {
 
               //错误
               if (res.data.meta.status === 400) {
-                this.$message.error(res.data.meta.msg);
+                
               } else if (res.data.meta.status == 200) {
                 //正确
-                this.$message.success(res.data.meta.msg);
+               
                 //保存token sessionStorage
                 window.sessionStorage.setItem("token", res.data.data.token);
                 //成功跳转首页

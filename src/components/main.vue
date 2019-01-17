@@ -12,9 +12,7 @@
             <div class="grid-content bg-purple-light">电商后台管理系统</div>
           </el-col>
           <el-col :span="2">
-            <div class="grid-content bg-purple">
-              <el-button @click="logout" type="success">退出</el-button>
-            </div>
+            <el-button @click="logout" type="success">退出</el-button>
           </el-col>
         </el-row>
       </el-header>
@@ -34,14 +32,17 @@
                 <span>{{item.authName}}</span>
               </template>
               <!-- 子菜单 -->
-              <el-menu-item v-for="(it, i) in item.children" :key="it.id" index="1-1">
+              <el-menu-item v-for="(it, i) in item.children" :key="it.id" :index="'/'+it.path">
                 <i class="el-icon-menu"></i>
                 {{it.authName}}
               </el-menu-item>
             </el-submenu>
           </el-menu>
         </el-aside>
-        <el-main>Main</el-main>
+        <el-main>
+          <!-- 渲染嵌套路由匹配的组件 -->
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -62,7 +63,6 @@ export default {
         type: "warning"
       })
         .then(() => {
-          window.sessionStorage.removeItem("token");
           //编程式代码
           this.$router.push("login");
           this.$message({
@@ -95,6 +95,9 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+.el-main {
+  padding:0 20px;
+}
 //预处理 作用域
 .main-container {
   height: 100%;

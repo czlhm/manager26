@@ -7,6 +7,7 @@ Vue.use(VueRouter);
 //导入路由管理的组件
 import login from '../components/login.vue';
 import main from '../components/main.vue';
+import users from '../components/users.vue';
 
 //写规则
 let routes = [
@@ -18,7 +19,13 @@ let routes = [
     //首页
     {
         path: '/',
-        component: main
+        component: main,
+        children:[
+          {
+            path:'users',
+            component:users
+          }
+        ]
     }
 ]
 //实例化对象
@@ -28,7 +35,6 @@ let router = new VueRouter({
 
 //注册导航守卫 (就是回到函数)
 router.beforeEach((to, from, next) => {
-    
     // ...
     // next 方法如果不执行 就不会跳转
     next();
