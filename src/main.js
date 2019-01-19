@@ -18,6 +18,15 @@ import breadcrumb from './components/breadcrumb .vue';
 //注册全局面包屑组件
 Vue.component('breadcrumb',breadcrumb);
 
+// 导入moment.js
+import moment from 'moment';
+
+//导入过滤器
+Vue.filter('beautifyTime',(value)=>{
+  // moment.js格式化
+  return moment(value).format('YYYY年MM月DD日 HH:mm:ss')
+})
+
 new Vue({
   el: '#app',
   //挂载到 Vue实例上

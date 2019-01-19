@@ -28,25 +28,18 @@
     <!-- 表格 -->
     <el-row>
       <el-col :span="24">
-        <el-table :data="userList" class="moder" style="width: 100%" border>
+        <el-table :data="goodsList" class="moder" style="width: 100%" border>
           <el-table-column label="#" width="30" height="40" type="index"></el-table-column>
-          <el-table-column prop="username" label="姓名" width="180"></el-table-column>
-          <el-table-column prop="email" label="邮箱" width="300"></el-table-column>
-          <el-table-column prop="mobile" label="电话" width="300"></el-table-column>
-          <el-table-column prop="mg_state" label="用户状态" width="80">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.mg_state"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-              ></el-switch>
-            </template>
+          <el-table-column prop="goods_name" label="商品名称" width="500"></el-table-column>
+          <el-table-column prop="goods_price" label="商品价格(元)" width="100"></el-table-column>
+          <el-table-column prop="goods_weight" label="商品重量" width="100"></el-table-column>
+          <el-table-column prop="add_time" label="创建时间" width="250">
+            <template slot-scope="prop">{{prop.row.add_time | beautifyTime}}</template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button type="primary" plain size="mini" icon="el-icon-edit"></el-button>
               <el-button type="danger" plain size="mini" icon="el-icon-delete"></el-button>
-              <el-button type="warning" plain size="mini" icon="el-icon-check"></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -56,6 +49,8 @@
     <el-row>
       <el-col :span="24">
         <el-pagination
+         @size-change="sizeChange"
+          @current-change="currentChange"
           :current-page="pageDate.pagenum"
           :page-sizes="[2, 4, 6, 8,10]"
           :page-size="100"
@@ -68,31 +63,56 @@
 </template>
 <script>
 export default {
+  name: "goods",
   data() {
     return {
-      leven2: "用户管理",
-      leven3: "用户列表",
+      leven2: "商品管理",
+      leven3: "商品列表",
       //用户的数据
       pageDate: {
         query: "",
         //页码
         pagenum: 1,
         //页容量
-        pagesize: 10
+        pagesize: 6
       },
       // 总页数
       total: 0,
-      // 用户的数据
-      userList: []
+      // 商品的数据
+      goodsList: []
     };
+  },
+  //事件
+  methods: {
+    //获取分页数据的方法
+    async getGoods() {
+      // 从上往下执行代码
+      let res = await this.$axios.get("goods", {
+        params: this.pageDate
+      });
+      this.total = res.data.data.total;
+      this.goodsList = res.data.data.goods;
+    },
+    // 页码改变
+    currentChange(pagenum) {
+      //修改页码 重新获取数据
+      this.pageDate.pagenum = pagenum;
+      this.getGoods();
+    },
+    //页容量改变
+    sizeChange(pagesize){
+      //修改页容量
+      this.pageDate.pagesize = pagesize;
+      //重置页码
+      this.pageDate.pagenum = 1;
+      //重新获取数据
+      this.getGoods();
+    }
   },
   //生命周期函数
   async created() {
-    let res = await this.$axios.get("users", {
-      params: this.pageDate
-    });
-
-    this.userList = res.data.data.users;
+    //直接调用方法
+    this.getGoods();
   }
 };
 </script>
